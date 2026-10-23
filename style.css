@@ -1,0 +1,387 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --bg-dark: #07111f;
+    --bg-light: #111f35;
+    --primary: #14e2c0;
+    --secondary: #7c83ff;
+    --text: #f5f7ff;
+    --muted: #a8b4ca;
+    --card: rgba(255, 255, 255, 0.06);
+    --border: rgba(255, 255, 255, 0.12);
+    --o-color: #ff727f;
+    --x-color: #70a5ff;
+    --win-color: #43f5a3;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 24px 16px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    text-align: center;
+    color: var(--text);
+    background:
+        radial-gradient(ellipse at 15% 10%, rgba(20, 226, 192, 0.15), transparent 40%),
+        radial-gradient(ellipse at 85% 85%, rgba(124, 131, 255, 0.16), transparent 42%),
+        linear-gradient(135deg, var(--bg-dark), var(--bg-light));
+}
+
+/* Heading */
+h1 {
+    margin: 8px 0 14px;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: 1px;
+    line-height: 1.25;
+    background: linear-gradient(90deg, #ffffff, var(--primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 18px rgba(20, 226, 192, 0.18));
+}
+
+/* Winner message */
+.msg-container {
+    width: min(100%, 650px);
+    min-height: 65px;
+    margin-bottom: 14px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.msg-container p {
+    color: var(--primary);
+    font-size: clamp(1rem, 3.2vw, 1.65rem);
+    font-weight: 600;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+    animation: messageAppear 0.45s ease both;
+}
+
+.hide {
+    display: none !important;
+}
+
+/* Main game layout */
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 26px;
+}
+
+.game-box {
+    width: min(82vw, 390px);
+    aspect-ratio: 1 / 1;
+    height: auto;
+    padding: 12px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: clamp(7px, 2vw, 12px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.035);
+    box-shadow:
+        0 20px 55px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+}
+
+/* Individual cells */
+.box {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: clamp(10px, 3vw, 17px);
+    background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.12),
+        rgba(255, 255, 255, 0.045)
+    );
+    color: var(--text);
+    font-size: clamp(2.7rem, 13vw, 5rem);
+    font-weight: 500;
+    line-height: 1;
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Hover only on devices with a real pointer */
+@media (hover: hover) and (pointer: fine) {
+    .box:not(:disabled):hover {
+        transform: translateY(-3px);
+        border-color: rgba(20, 226, 192, 0.65);
+        background: rgba(20, 226, 192, 0.1);
+        box-shadow: 0 8px 24px rgba(20, 226, 192, 0.12);
+    }
+}
+
+.box:active:not(:disabled) {
+    transform: scale(0.96);
+}
+
+.box:focus-visible,
+.btns:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 4px;
+}
+
+/* O and X colors */
+.box[style*="153, 29, 25"],
+.box[style*="991d19"] {
+    color: var(--o-color) !important;
+    text-shadow: 0 0 22px rgba(255, 114, 127, 0.25);
+}
+
+.box[style*="84, 84, 84"],
+.box[style*="545454"] {
+    color: var(--x-color) !important;
+    text-shadow: 0 0 22px rgba(112, 165, 255, 0.25);
+}
+
+/* Winning cells */
+.box.winner {
+    color: #052719 !important;
+    border: 2px solid var(--win-color);
+    background: linear-gradient(145deg, #a7ffd4, #43f5a3);
+    box-shadow:
+        0 0 15px rgba(67, 245, 163, 0.28),
+        0 0 32px rgba(67, 245, 163, 0.15);
+    animation: winnerPulse 0.8s ease-in-out infinite alternate;
+    cursor: default;
+}
+
+@keyframes winnerPulse {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.035);
+    }
+}
+
+.buttons {
+    width: min(100%, 390px);
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.btns {
+    min-width: 135px;
+    min-height: 48px;
+    padding: 11px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    box-shadow: 0 7px 20px rgba(0, 0, 0, 0.2);
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+#new-btn {
+    border-color: transparent;
+    background: linear-gradient(120deg, #14bfa8, #087fba);
+    color: #fff;
+}
+
+#reset-btn {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .btns:hover {
+        transform: translateY(-3px);
+        border-color: var(--primary);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.28);
+    }
+
+    #new-btn:hover {
+        background: linear-gradient(120deg, #19d8bd, #239de0);
+    }
+}
+
+.btns:active {
+    transform: scale(0.97);
+}
+
+/* Animations */
+
+@keyframes messageAppear {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* RESPONSIVE DESIGN */
+@media (min-width: 600px) {
+    body {
+        padding-top: 30px;
+    }
+
+    .container {
+        gap: 28px;
+    }
+
+    .game-box {
+        width: min(58vw, 390px);
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 20px 12px 26px;
+    }
+
+    h1 {
+        margin-top: 6px;
+        margin-bottom: 10px;
+        letter-spacing: 0;
+    }
+
+    .msg-container {
+        min-height: 65px;
+        margin-bottom: 10px;
+    }
+
+    .container {
+        gap: 22px;
+    }
+
+    .game-box {
+        width: min(88vw, 350px);
+        padding: 9px;
+        gap: 7px;
+        border-radius: 19px;
+    }
+
+    .box {
+        font-size: clamp(2.5rem, 16vw, 4rem);
+        border-radius: 11px;
+    }
+
+    .buttons {
+        gap: 10px;
+    }
+
+    .btns {
+        flex: 1;
+        min-width: 0;
+        max-width: 170px;
+        min-height: 46px;
+        padding: 10px 12px;
+        font-size: 0.86rem;
+    }
+}
+
+@media (max-width: 350px) {
+    body {
+        padding-inline: 8px;
+    }
+
+    .game-box {
+        width: 94vw;
+        padding: 7px;
+        gap: 6px;
+    }
+
+    .box {
+        font-size: 14vw;
+        border-radius: 9px;
+    }
+
+    .buttons {
+        gap: 8px;
+    }
+
+    .btns {
+        font-size: 0.78rem;
+        padding-inline: 7px;
+    }
+}
+
+/* Short screens / landscape */
+@media (max-height: 600px) and (min-width: 481px) {
+    body {
+        padding-top: 10px;
+        padding-bottom: 14px;
+    }
+
+    h1 {
+        font-size: 2rem;
+        margin: 0 0 5px;
+    }
+
+    .msg-container {
+        min-height: 42px;
+        margin-bottom: 5px;
+    }
+
+    .container {
+        gap: 12px;
+    }
+
+    .game-box {
+        width: min(55vh, 300px);
+    }
+
+    .buttons {
+        gap: 10px;
+    }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
